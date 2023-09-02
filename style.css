@@ -1,0 +1,28 @@
+body {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #171717;
+}
+
+#game {
+    background-color: black;
+    border: #f81b61 5px solid;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    height: 90%;
+    width: auto;
+
+    image-rendering: pixelated;
+}
+
+@media (max-aspect-ratio: 1 / 1) {
+    #game {
+        width: 90%;
+        height: auto;
+    }
+
+}
