@@ -98,9 +98,11 @@ window.onload = () => {
     requestAnimationFrame(animate);
 }
 
+
+
 /** @param {CanvasRenderingContext2D} ctx */
-function draw_memory(ctx, pixel_ratio) {
-    memory.forEach((pixel, ix) => {
+async function draw_memory(ctx, pixel_ratio) {
+    memory.forEach(async (pixel, ix) => {
         if (old_memory[ix] !== pixel) {
             ctx.fillStyle = pixel;
             const { row, col } = dim(ix);
@@ -109,7 +111,6 @@ function draw_memory(ctx, pixel_ratio) {
         }
     })
 }
-
 
 
 /** @param {number} r 
@@ -294,15 +295,13 @@ async function draw_map(tilemap, tileset) {
     })
 }
 
-/** @type {string[]} */
-
 
 async function animate() {
     updateCameraPosition();
 
     await draw_map(tilemap01, tileset01);
 
-    await playerset01.then(pset => {
+    await playerset01.then(async pset => {
         const pwidth = pset.t_scale;
         for (let ix = 0; ix < pwidth * pwidth; ix++) {
             const { row, col } = dim(ix, pwidth)
@@ -313,5 +312,32 @@ async function animate() {
     })
 
     draw_memory(ctx, pixel_ratio(canvas_width, canvas_height));
+
+    calculateFPS();
     requestAnimationFrame(animate);
+}
+
+let fps = 0;
+let lastFrameTime = performance.now();
+
+const fpsBuffer = [];
+const fpsBufferSize = 100;
+
+function calculateFPS() {
+    const currentTime = performance.now();
+    const deltaTime = currentTime - lastFrameTime;
+
+    fps = Math.round(1000 / deltaTime);
+
+    fpsBuffer.push(fps);
+
+
+    if (fpsBuffer.length > fpsBufferSize) {
+        fpsBuffer.shift();
+    }
+
+    const averageFPS = Math.round(fpsBuffer.reduce((a, b) => a + b) / fpsBuffer.length);
+
+    document.getElementById('fps').textContent = averageFPS + " FPS";
+    lastFrameTime = currentTime;
 }
